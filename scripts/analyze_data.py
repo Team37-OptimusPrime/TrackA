@@ -661,49 +661,6 @@ def _save(fig, out_dir: Path, fname: str):
     plt.close(fig)
     print(f"  저장: {path}")
 
-
-# ────────────────────────────────────────────────
-# 더미 데이터
-# ────────────────────────────────────────────────
-def generate_dummy_data() -> pd.DataFrame:
-    np.random.seed(42)
-    rows = []
-    for wl, meta in WORKLOAD_META.items():
-        cat = meta["category"]
-        for load in [20, 50, 100]:
-            for rep in range(1, 4):
-                u        = float(load)
-                base_cpu = 35 + u*0.5 + u**2*0.003 + np.random.randn()*3
-                base_gpu = (
-                    20 + u*1.2 + u**2*0.006 + np.random.randn()*4
-                    if cat != "CPU-centric" else
-                    8  + np.random.randn()*1.5
-                )
-                rows.append({
-                    "workload"        : wl,
-                    "load_level"      : load,
-                    "repeat"          : rep,
-                    "category"        : cat,
-                    "cpu_power_mean"  : max(base_cpu, 5),
-                    "cpu_power_std"   : abs(np.random.randn()*1.5),
-                    "gpu_power_mean"  : max(base_gpu, 0),
-                    "gpu_power_std"   : abs(np.random.randn()*2),
-                    "total_power_mean": max(base_cpu+base_gpu, 10),
-                    "total_power_std" : abs(np.random.randn()*2.5),
-                    "cpu_busy_mean"   : min(u + np.random.randn()*4, 100),
-                    "cpu_busy_std"    : abs(np.random.randn()*2),
-                    "gpu_util_mean"   : (min(u*0.9+np.random.randn()*5, 100)
-                                         if cat != "CPU-centric" else np.random.randn()*2),
-                    "gpu_mem_mean"    : (u*0.4+np.random.randn()*3 if cat != "CPU-centric" else 0),
-                    "cpu_temp_mean"   : 38 + u*0.15 + np.random.randn()*1.5,
-                    "gpu_temp_mean"   : (45 + u*0.2 + np.random.randn()*2
-                                         if cat != "CPU-centric" else 35+np.random.randn()),
-                    "energy_mean"     : (base_cpu+base_gpu)*60,
-                    "energy_std"      : abs(np.random.randn()*5),
-                })
-    return pd.DataFrame(rows)
-
-
 # ────────────────────────────────────────────────
 # main
 # ────────────────────────────────────────────────
