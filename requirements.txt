@@ -1,0 +1,14 @@
+# ── Deep Learning ──────────────────────────────
+torch
+torchvision
+transformers
+
+# ── Data / Numerics ────────────────────────────
+numpy
+pandas
+scikit-learn
+matplotlib
+
+# ── System / GPU Monitoring ────────────────────
+psutil
+pynvml
